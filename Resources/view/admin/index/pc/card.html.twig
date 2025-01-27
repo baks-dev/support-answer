@@ -1,0 +1,46 @@
+{% trans_default_domain('admin.support.answer') %}
+
+<tr class="vertical-middle" id="{{ item.id }}">
+    <td class="text-nowrap">
+        {# Пользовательское меню #}
+        {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
+    </td>
+
+    {# Заголовок ответа #}
+    <td class="w-25">
+        <a
+                class="text-decoration-none offcanvas-link "
+                data-href="{{ path('support:admin.detail', { id: item.id }) }}"
+                data-bs-toggle="#offcanvas"
+                data-bs-target="#offcanvas"
+                role="button"
+                aria-controls="offcanvas"
+        >
+            <span class="d-inline-block text-truncate  align-middle" style="max-width: 150px;">
+                {{ item.title|raw }}
+            </span>
+        </a>
+    </td>
+
+    {# Тип профиля #}
+    <td class="ms-0 text-center">
+        <div class="w-25">
+            <span class="d-inline-block text-truncate text-emphasis align-middle"
+                  style="max-width: 150px;">
+                {% if item.name %}
+                    {{ item.name }}
+                    {% else %}
+                    {{ 'admin.filter.unchosen_profile'|trans }}
+                {% endif %}
+            </span>
+        </div>
+    </td>
+
+    {# Содержимое ответа #}
+    <td class="w-25">
+        <span class="d-inline-block text-truncate  align-middle"
+              style="max-width: 250px;">
+            {{ item.content|striptags }}
+        </span>
+    </td>
+</tr>

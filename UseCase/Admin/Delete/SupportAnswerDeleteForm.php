@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,32 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Support\Answer;
+namespace BaksDev\Support\Answer\UseCase\Admin\Delete;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BaksDevSupportAnswerBundle extends AbstractBundle
+final class SupportAnswerDeleteForm extends AbstractType
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+        /* Удалить ******************************************************/
+        $builder->add(
+            'support_answer_delete',
+            SubmitType::class,
+            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+        );
+    }
 
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => SupportAnswerDeleteDTO::class,
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
+        ]);
+    }
 }

@@ -21,16 +21,18 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Support\Answer\Repository\AllSupportAnswer;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterDTO;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-
-class BaksDevSupportAnswerBundle extends AbstractBundle
+interface AllSupportAnswerInterface
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    public function search(SearchDTO $search): self;
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    public function filter(SupportAnswerTypeProfileFilterDTO $filter): self;
 
+    /** Метод возвращает пагинатор SupportAnswer */
+    public function findPaginator(): PaginatorInterface;
 }
