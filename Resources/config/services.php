@@ -21,16 +21,34 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Support\Answer\BaksDevSupportAnswerBundle;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+return static function(ContainerConfigurator $container) {
 
-class BaksDevSupportAnswerBundle extends AbstractBundle
-{
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    $services = $container->services()
+        ->defaults()
+        ->public()
+        ->autowire()
+        ->autoconfigure();
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    $NAMESPACE = BaksDevSupportAnswerBundle::NAMESPACE;
+    $PATH = BaksDevSupportAnswerBundle::PATH;
 
-}
+    $services->load($NAMESPACE, $PATH)
+        ->exclude([
+            $PATH.'{Entity,Resources,Type}',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Test.php',
+        ]);
+
+    $services->load(BaksDevSupportAnswerBundle::NAMESPACE, BaksDevSupportAnswerBundle::PATH)
+        ->exclude([
+            BaksDevSupportAnswerBundle::PATH.'{Entity,Resources,Type}',
+            BaksDevSupportAnswerBundle::PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            BaksDevSupportAnswerBundle::PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
+        ]);
+
+};

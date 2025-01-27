@@ -21,16 +21,37 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Support\Answer\Repository\AllSupportAnswer\Tests;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Support\Answer\Repository\AllSupportAnswer\AllSupportAnswerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-
-class BaksDevSupportAnswerBundle extends AbstractBundle
+/**
+ * @group support-answer
+ */
+class AllSupportAnswerRepositoryTest extends KernelTestCase
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    public function testUseCase(): void
+    {
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+        /** @var AllSupportAnswerInterface $AllSupportAnswerRepositoryInterface */
+        $AllSupportAnswerRepositoryInterface = self::getContainer()->get(AllSupportAnswerInterface::class);
 
+        $response = $AllSupportAnswerRepositoryInterface
+            ->search(new SearchDTO())
+            ->findPaginator();
+
+        if(!empty($response->getData()))
+        {
+            $current = current($response->getData());
+
+            self::assertTrue(array_key_exists("id", $current));
+            self::assertTrue(array_key_exists("title", $current));
+            self::assertTrue(array_key_exists("name", $current));
+            self::assertTrue(array_key_exists("content", $current));
+        }
+
+        self::assertTrue(true);
+    }
 }
