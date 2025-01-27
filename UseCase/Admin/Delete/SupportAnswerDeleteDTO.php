@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,16 +21,30 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Support\Answer\UseCase\Admin\Delete;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-
-class BaksDevSupportAnswerBundle extends AbstractBundle
+final class SupportAnswerDeleteDTO
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    
+    /**
+     * Идентификатор
+     */
+    #[Assert\Uuid]
+    private ?SupportAnswerUid $id = null;
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    public function getId(): ?SupportAnswerUid
+    {
+        return $this->id;
+    }
+
+    public function setId(?SupportAnswerUid $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
 }

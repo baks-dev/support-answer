@@ -1,0 +1,42 @@
+{% trans_default_domain('admin.support.answer') %}
+
+{% set ROLE = 'ROLE_SUPPORT' %}
+
+{# ---- CSS ------------------------------------------------------------ #}
+{% block title %}
+    {{ 'admin.page.index'|trans }}
+{% endblock %}
+
+{# ---- ШАБЛОН ------------------------------------------------------------ #}
+{% extends Template('/admin/base.html.twig') %}
+
+{# ---- CSS ------------------------------------------------------------ #}
+{% block stylesheets %}
+    <link href="/assets/plugins/nice-select2/nice-select2.min.css" rel="stylesheet">
+{% endblock %}
+
+{# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
+{% block content %}
+    {{ include(_self|replace({ "support-answer.html.twig": "/"~baks_settings.device~"/content.html.twig" })) }}
+{% endblock %}
+
+{% block javascript %}
+<script nonce='{{ csp_nonce() }}' async data-src='/assets/plugins/nice-select2/nice-select2.min.js?v={{ version }}'
+            class='lazy'></script>
+
+<script nonce='{{ csp_nonce() }}' async data-src='/assets/js/radio.input.min.js?v={{ version }}'
+        class='lazy'></script>
+
+<script nonce="{{ csp_nonce() }}">
+
+    /**
+     * Сабмитим форму при выборе типа профиля пользователя
+     */
+    document.addEventListener("DOMContentLoaded", (event) =>
+    {
+        const form = document.forms.support_answer_type_profile_filter_form
+        form.addEventListener('change', () => { setTimeout(() => { form.submit(); }, 300); });
+    });
+
+</script>
+{% endblock %}

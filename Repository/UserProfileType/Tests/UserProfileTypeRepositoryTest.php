@@ -21,16 +21,33 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Support\Answer\Repository\UserProfileType\Tests;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Support\Answer\Repository\UserProfileType\UserProfileTypeInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-
-class BaksDevSupportAnswerBundle extends AbstractBundle
+/**
+ * @group support-answer
+ */
+class UserProfileTypeRepositoryTest extends KernelTestCase
 {
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    public function testUseCase(): void
+    {
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+        /** @var UserProfileTypeInterface $UserProfileTypeInterface */
+        $UserProfileTypeInterface = self::getContainer()->get(UserProfileTypeInterface::class);
 
+        $response = $UserProfileTypeInterface->findUserTypeProfiles();
+
+        if(count($response))
+        {
+            $current = current($response);
+
+            self::assertTrue(property_exists($current, 'option'));
+            self::assertTrue(property_exists($current, 'attr'));
+            self::assertTrue(method_exists($current, 'getTypeProfileValue'));
+        }
+
+        self::assertTrue(true);
+    }
 }

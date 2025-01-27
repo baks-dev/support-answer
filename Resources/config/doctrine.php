@@ -21,16 +21,27 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace BaksDev\Support\Answer;
+use BaksDev\Support\Answer\BaksDevSupportAnswerBundle;
+use BaksDev\Support\Answer\Type\Id\SupportAnswerType;
+use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileType;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use Symfony\Config\DoctrineConfig;
 
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
 
-class BaksDevSupportAnswerBundle extends AbstractBundle
-{
-    public const string NAMESPACE = __NAMESPACE__.'\\';
+    $doctrine->dbal()->type(SupportAnswerUid::TYPE)->class(SupportAnswerType::class);
+    $doctrine->dbal()->type(TypeProfileUid::TYPE)->class(TypeProfileType::class);
 
-    public const string PATH = __DIR__.DIRECTORY_SEPARATOR;
+    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 
-}
+    $emDefault
+        ->mapping('support-answer')
+        ->type('attribute')
+        ->dir(BaksDevSupportAnswerBundle::PATH.'Entity')
+        ->isBundle(false)
+        ->prefix(BaksDevSupportAnswerBundle::NAMESPACE.'\\Entity')
+        ->alias('support-answer');
+};
