@@ -26,17 +26,17 @@ declare(strict_types=1);
 namespace BaksDev\Support\Answer\Controller\Admin;
 
 use BaksDev\Centrifugo\Services\Token\TokenUserGenerator;
+use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
+use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterDTO;
+use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterForm;
 use BaksDev\Support\Answer\Repository\AllSupportAnswer\AllSupportAnswerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use BaksDev\Core\Controller\AbstractController;
-use Symfony\Component\Routing\Attribute\Route;
-use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterDTO;
-use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterForm;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 #[RoleSecurity('ROLE_SUPPORT')]
@@ -54,18 +54,25 @@ final class IndexController extends AbstractController
          * Форма фильтра
          */
         $filter = new SupportAnswerTypeProfileFilterDTO();
-        $filterForm = $this->createForm(SupportAnswerTypeProfileFilterForm::class, $filter, [
-            'action' => $this->generateUrl('support-answer:admin.index'),
-        ]);
-
-        $filterForm->handleRequest($request);
+        $filterForm = $this
+            ->createForm(
+                type: SupportAnswerTypeProfileFilterForm::class,
+                data: $filter,
+                options: ['action' => $this->generateUrl('support-answer:admin.index'),]
+            )
+            ->handleRequest($request);
 
         /**
          * Форма поиска
          */
         $search = new SearchDTO();
+
         $searchForm = $this
-            ->createForm(SearchForm::class, $search)
+            ->createForm(
+                type: SearchForm::class,
+                data: $search,
+                options: ['action' => $this->generateUrl('support-answer:admin.index')]
+            )
             ->handleRequest($request);
 
         /**
