@@ -40,15 +40,10 @@ return static function(ContainerConfigurator $container) {
         ->exclude([
             $PATH.'{Entity,Resources,Type}',
             $PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Result.php',
             $PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
             $PATH.'**'.DIRECTORY_SEPARATOR.'*Test.php',
         ]);
 
-    $services->load(BaksDevSupportAnswerBundle::NAMESPACE, BaksDevSupportAnswerBundle::PATH)
-        ->exclude([
-            BaksDevSupportAnswerBundle::PATH.'{Entity,Resources,Type}',
-            BaksDevSupportAnswerBundle::PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
-            BaksDevSupportAnswerBundle::PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
-        ]);
 
 };

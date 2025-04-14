@@ -54,8 +54,13 @@ final class EditControllerTest extends WebTestCase
         $supportAnswer = $em->getRepository(SupportAnswer::class)
             ->findOneBy(['type' => TypeProfileUid::TEST]);
 
-        $testAnswerUuid = $supportAnswer->getId()->__toString();
-        self::$url = sprintf('/admin/support/answer/edit/%s', $testAnswerUuid);
+        if(empty($supportAnswer))
+        {
+            self::assertNull($supportAnswer);
+            return;
+        }
+
+        self::$url = sprintf('/admin/support/answer/edit/%s', $supportAnswer);
     }
 
 

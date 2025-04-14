@@ -27,8 +27,8 @@ namespace BaksDev\Support\Answer\Entity;
 
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /* SupportAnswer */
@@ -67,6 +67,11 @@ class SupportAnswer
         $this->id = new SupportAnswerUid();
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;
@@ -103,10 +108,6 @@ class SupportAnswer
         return $this;
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->id;
-    }
 
     public function getId(): SupportAnswerUid
     {
