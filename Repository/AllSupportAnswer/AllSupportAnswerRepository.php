@@ -82,7 +82,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
 
         $dbal->leftJoin(
             'support_answer',
-            TypeProfile::TABLE,
+            TypeProfile::class,
             'profile',
             'profile.id = support_answer.type'
         );
@@ -90,7 +90,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
         /* TypeProfile Event */
         $dbal->leftJoin(
             'profile',
-            TypeProfileEvent::TABLE,
+            TypeProfileEvent::class,
             'profile_event',
             'profile_event.id = profile.event'
         );
@@ -100,7 +100,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
             ->addSelect('profile_trans.name')
             ->leftJoin(
                 'profile',
-                TypeProfileTrans::TABLE,
+                TypeProfileTrans::class,
                 'profile_trans',
                 'profile_trans.event = profile.event AND profile_trans.local = :local'
             );

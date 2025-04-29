@@ -53,8 +53,10 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $dbal->select('support_answer.id');
-        $dbal->addSelect('support_answer.title');
+        $dbal
+            ->select('support_answer.id')
+            ->addSelect('support_answer.title')
+            ->addSelect('support_answer.content');
 
         $dbal
             ->addSelect('
@@ -64,13 +66,11 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
             ) AS type
         ');
 
-        $dbal->addSelect('support_answer.content');
-
         $dbal->from(SupportAnswer::class, 'support_answer');
 
         $dbal->leftJoin(
             'support_answer',
-            TypeProfile::TABLE,
+            TypeProfile::class,
             'profile',
             'profile.id = support_answer.type'
         );
@@ -78,7 +78,7 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
         /* TypeProfile Event */
         $dbal->leftJoin(
             'profile',
-            TypeProfileEvent::TABLE,
+            TypeProfileEvent::class,
             'profile_event',
             'profile_event.id = profile.event'
         );
@@ -88,7 +88,7 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
             ->addSelect('profile_trans.name')
             ->leftJoin(
                 'profile',
-                TypeProfileTrans::TABLE,
+                TypeProfileTrans::class,
                 'profile_trans',
                 'profile_trans.event = profile.event AND profile_trans.local = :local'
             );
@@ -106,18 +106,18 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
 
         $dbal->orWhere('support_answer.type IS NULL');
 
-        $dbal
-            ->orderBy('support_answer.title');
+        $dbal->orderBy('support_answer.title');
 
         $result = $dbal->fetchAllAssociative();
 
         $results = [];
         foreach($result as $item)
         {
-            $supportAnswer = new SupportAnswer();
-            $supportAnswer->setType(new TypeProfileUid($item['type']))
+            $supportAnswer = new SupportAnswer()
+                ->setType(new TypeProfileUid($item['type']))
                 ->setContent($item['content'])
                 ->setTitle($item['title']);
+
             $results[] = $supportAnswer;
         }
 
