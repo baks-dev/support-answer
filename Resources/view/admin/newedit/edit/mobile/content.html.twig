@@ -1,0 +1,52 @@
+{% trans_default_domain('support-answer.admin') %}
+
+<div class="modal-dialog modal-dialog-centered" style="max-width: 320px;">
+    {{ form_start(form) }}
+    <div class="modal-content p-3 border-bottom border-5 border-primary">
+        <div class="modal-header">
+
+            <h5 class="modal-title">
+                {# Заголовок модального окна #}
+                {{ 'page.new'|trans }}
+            </h5>
+
+            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                <span class="svg-icon svg-icon-2x"></span>
+            </div>
+        </div>
+
+        <div class="modal-body">
+
+
+            {{ form_row(form.title, { label : 'Заголовок ответа'|trans, placeholder : 'Укажите заголовок' } ) }}
+
+            {{ form_row(form.content, { label : 'Содержимое ответа'|trans, placeholder : 'Задайте содержимое ответа' } ) }}
+
+            {{ form_row(form.type, { label : 'Тип профиля'|trans, placeholder : 'Выберите тип профиля из списка...' } ) }}
+
+
+        </div>
+
+
+        <div class="modal-footer">
+            <div class="flex-grow-1">
+                &nbsp;
+            </div>
+            <div class="d-flex gap-3">
+                {# Отмена #}
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    {{ 'btn.cancel'|trans({}, 'core.btn') }}
+                </button>
+
+                {# Дбавить #}
+                {{ form_widget(form.support_answer, { label: '
+                    <span>'~ 'btn.save'|trans({}, 'core.btn') ~'</span>
+                    <span class="spinner-border spinner-border-sm vertical-middle d-none"></span>
+                '}) }}
+            </div>
+
+        </div>
+
+    </div>
+    {{ form_end(form) }}
+</div>
