@@ -1,0 +1,14 @@
+{% trans_default_domain('support-answer.admin') %}
+
+<div>
+    {{ form_start(form) }}
+
+    {{ form_row(form.title, { label : 'Заголовок ответа'|trans, placeholder : 'Укажите заголовок' } ) }}
+
+    {{ form_row(form.content, { label : 'Содержимое ответа'|trans, placeholder : 'Задайте содержимое ответа' } ) }}
+
+    {{ form_row(form.type, { label : 'Тип профиля'|trans, placeholder : 'Выберите тип профиля из списка...' } ) }}
+
+    {{ form_end(form) }}
+</div>
+
