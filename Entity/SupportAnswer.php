@@ -27,6 +27,7 @@ namespace BaksDev\Support\Answer\Entity;
 
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -61,6 +62,12 @@ class SupportAnswer
     #[Assert\Uuid]
     #[ORM\Column(type: TypeProfileUid::TYPE, nullable: true)]
     private ?TypeProfileUid $type;
+
+    /** Профиль пользователя */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Column(type: UserProfileUid::TYPE, nullable: true)]
+    private UserProfileUid $profile;
 
     public function __construct()
     {
@@ -113,5 +120,17 @@ class SupportAnswer
     {
         return $this->id;
     }
+
+    public function getProfile(): UserProfileUid
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(UserProfileUid $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
+    }
+
 
 }

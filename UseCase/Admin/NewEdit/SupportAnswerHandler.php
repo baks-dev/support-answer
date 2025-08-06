@@ -51,7 +51,7 @@ final readonly class SupportAnswerHandler
         $SupportAnswer = $command->getId() ?
             $this->entityManager->getRepository(SupportAnswer::class)->find($command->getId()) :
             new SupportAnswer();
-        
+
         if(false === ($SupportAnswer instanceof SupportAnswer))
         {
             return false;
@@ -60,7 +60,8 @@ final readonly class SupportAnswerHandler
         $SupportAnswer->setTitle($command->getTitle())
             ->setContent($command->getContent())
             ->setType($command->getType())
-        ;
+            ->setProfile($command->getProfile());
+
         $this->entityManager->persist($SupportAnswer);
         $this->entityManager->flush();
 

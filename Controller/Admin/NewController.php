@@ -46,7 +46,7 @@ final class NewController extends AbstractController
         SupportAnswerHandler $supportAnswerHandler,
     ): Response
     {
-        $SupportAnswerDTO = new SupportAnswerDTO();
+        $SupportAnswerDTO = new SupportAnswerDTO($this->getCurrentProfileUid());
 
         /** Форма */
         $form = $this

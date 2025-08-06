@@ -31,11 +31,14 @@ use BaksDev\Users\Profile\TypeProfile\Entity\Event\TypeProfileEvent;
 use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
 use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterface
 {
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
     ) {}
 
     /**
@@ -105,6 +108,14 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
             );
 
         $dbal->orWhere('support_answer.type IS NULL');
+
+        /* Выбрать ответы только текущего профиля */
+        $dbal->andWhere('support_answer.profile = :profile')
+            ->setParameter(
+                'profile',
+                $this->UserProfileTokenStorage->getProfileCurrent(),
+                UserProfileUid::TYPE
+            );
 
         $dbal->orderBy('support_answer.title');
 

@@ -47,11 +47,13 @@ final class EditController extends AbstractController
     ): Response
     {
 
-        $SupportAnswerDTO = new SupportAnswerDTO()
+
+        $SupportAnswerDTO = new SupportAnswerDTO($this->getCurrentProfileUid())
             ->setId($SupportAnswer->getId())
             ->setTitle($SupportAnswer->getTitle())
             ->setType($SupportAnswer->getType())
             ->setContent($SupportAnswer->getContent());
+
 
         /** Форма */
         $form = $this
