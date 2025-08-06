@@ -27,6 +27,7 @@ namespace BaksDev\Support\Answer\UseCase\Admin\NewEdit;
 
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class SupportAnswerDTO
@@ -50,6 +51,15 @@ final class SupportAnswerDTO
      */
     #[Assert\Uuid]
     private ?TypeProfileUid $type = null;
+
+    /** Профиль пользователя */
+    #[Assert\Uuid]
+    private ?UserProfileUid $profile = null;
+
+    public function __construct(UserProfileUid $profile)
+    {
+        $this->profile = $profile;
+    }
 
     public function getTitle(): ?string
     {
@@ -97,6 +107,11 @@ final class SupportAnswerDTO
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getProfile(): UserProfileUid
+    {
+        return $this->profile;
     }
     
 }

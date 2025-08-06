@@ -34,6 +34,8 @@ use BaksDev\Users\Profile\TypeProfile\Entity\Event\TypeProfileEvent;
 use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
 use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 final class AllSupportAnswerRepository implements AllSupportAnswerInterface
 {
@@ -44,6 +46,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
+        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
     ) {}
 
     public function search(SearchDTO $search): self
@@ -79,6 +82,16 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
         $dbal->addSelect('support_answer.content');
 
         $dbal->from(SupportAnswer::class, 'support_answer');
+
+        /* Задать профиль текущего пользователя */
+        $dbal
+            ->where('support_answer.profile = :profile')
+            ->setParameter(
+                'profile',
+                $this->UserProfileTokenStorage->getProfileCurrent(),
+                UserProfileUid::TYPE
+            );
+
 
         $dbal->leftJoin(
             'support_answer',
