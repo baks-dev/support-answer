@@ -46,24 +46,15 @@ final class EditController extends AbstractController
         SupportAnswerHandler $supportAnswerHandler,
     ): Response
     {
-
-
-        $SupportAnswerDTO = new SupportAnswerDTO($this->getCurrentProfileUid())
-            ->setId($SupportAnswer->getId())
-            ->setTitle($SupportAnswer->getTitle())
-            ->setType($SupportAnswer->getType())
-            ->setContent($SupportAnswer->getContent());
-
+        $SupportAnswerDTO = new SupportAnswerDTO($this->getCurrentProfileUid());
+        $SupportAnswer->getDto($SupportAnswerDTO);
 
         /** Форма */
         $form = $this
             ->createForm(
                 type: SupportAnswerForm::class,
                 data: $SupportAnswerDTO,
-                options: ['action' => $this->generateUrl(
-                    route: 'support-answer:admin.newedit.edit',
-                    parameters: ['id' => $SupportAnswer->getId()]
-                ),]
+                options: ['action' => $this->generateUrl('support-answer:admin.newedit.edit', ['id' => $SupportAnswer->getId()])],
             )
             ->handleRequest($request);
 
@@ -74,10 +65,10 @@ final class EditController extends AbstractController
             $handle = $supportAnswerHandler->handle($SupportAnswerDTO);
 
             $this->addFlash(
-                'page.edit',
-                $handle instanceof SupportAnswer ? 'success.edit' : 'danger.edit',
-                'support-answer.admin',
-                $handle
+                type: 'page.edit',
+                message: $handle instanceof SupportAnswer ? 'success.edit' : 'danger.edit',
+                domain: 'support-answer.admin',
+                arguments: $handle,
             );
 
             return $this->redirectToRoute('support-answer:admin.index');

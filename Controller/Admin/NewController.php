@@ -53,7 +53,7 @@ final class NewController extends AbstractController
             ->createForm(
                 type: SupportAnswerForm::class,
                 data: $SupportAnswerDTO,
-                options: ['action' => $this->generateUrl('support-answer:admin.newedit.new'),]
+                options: ['action' => $this->generateUrl('support-answer:admin.newedit.new'),],
             )
             ->handleRequest($request);
 
@@ -65,13 +65,15 @@ final class NewController extends AbstractController
 
             $this->addFlash
             (
-                'page.new',
-                $handle instanceof SupportAnswer ? 'success.new' : 'danger.new',
-                'support-answer.admin',
-                $handle
+                type: 'page.new',
+                message: $handle instanceof SupportAnswer ? 'success.new' : 'danger.new',
+                domain: 'support-answer.admin',
+                arguments: $handle,
             );
 
-            return $handle instanceof SupportAnswer ? $this->redirectToRoute('support-answer:admin.index') : $this->redirectToReferer();
+            return $handle instanceof SupportAnswer
+                ? $this->redirectToRoute('support-answer:admin.index')
+                : $this->redirectToReferer();
         }
 
         return $this->render(['form' => $form->createView()]);

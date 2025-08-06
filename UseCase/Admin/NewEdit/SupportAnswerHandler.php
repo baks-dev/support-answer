@@ -25,52 +25,33 @@ declare(strict_types=1);
 
 namespace BaksDev\Support\Answer\UseCase\Admin\NewEdit;
 
-use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Support\Answer\Entity\SupportAnswer;
 use BaksDev\Support\Answer\Messenger\SupportAnswerMessage;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final readonly class SupportAnswerHandler
+final class SupportAnswerHandler extends AbstractHandler
 {
-    public function __construct(
-        private EntityManagerInterface $entityManager,
-        private MessageDispatchInterface $messageDispatch,
-        private ValidatorInterface $validator
-    ) {}
-
     public function handle(SupportAnswerDTO $command): bool|string|SupportAnswer
     {
-        $errors = $this->validator->validate($command);
+        $this->setCommand($command);
 
-        if($errors->count())
+        $SupportAnswer = $this->prePersistOrUpdate(SupportAnswer::class, ['id' => $command->getId()]);
+
+
+        /** Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
         {
-            return false;
+            return $this->validatorCollection->getErrorUniqid();
         }
 
-        $SupportAnswer = $command->getId() ?
-            $this->entityManager->getRepository(SupportAnswer::class)->find($command->getId()) :
-            new SupportAnswer();
-
-        if(false === ($SupportAnswer instanceof SupportAnswer))
-        {
-            return false;
-        }
-
-        $SupportAnswer->setTitle($command->getTitle())
-            ->setContent($command->getContent())
-            ->setType($command->getType())
-            ->setProfile($command->getProfile());
-
-        $this->entityManager->persist($SupportAnswer);
-        $this->entityManager->flush();
+        $this->flush();
 
         /* Отправляем сообщение в шину */
         $message = new SupportAnswerMessage($command->getId());
 
         $this->messageDispatch->dispatch(
             message: $message,
-            transport: 'support-answer'
+            transport: 'support-answer',
         );
 
         return $SupportAnswer;

@@ -48,17 +48,15 @@ final class DeleteController extends AbstractController
         SupportAnswerDeleteHandler $SupportAnswerDeleteHandler,
     ): Response
     {
-
         $SupportAnswerDeleteDTO = new SupportAnswerDeleteDTO();
-        $SupportAnswerDeleteDTO->setId($SupportAnswer->getId());
+        $SupportAnswer->getDto($SupportAnswerDeleteDTO);
 
         $form = $this
-            ->createForm(SupportAnswerDeleteForm::class, $SupportAnswerDeleteDTO, [
-                'action' => $this->generateUrl(
-                    'support-answer:admin.delete',
-                    ['id' => $SupportAnswer->getId()]
-                ),
-            ])
+            ->createForm(
+                type: SupportAnswerDeleteForm::class,
+                data: $SupportAnswerDeleteDTO,
+                options: ['action' => $this->generateUrl('support-answer:admin.delete', ['id' => $SupportAnswer->getId()])],
+            )
             ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
@@ -68,10 +66,10 @@ final class DeleteController extends AbstractController
             $handle = $SupportAnswerDeleteHandler->handle($SupportAnswerDeleteDTO);
 
             $this->addFlash(
-                'page.delete',
-                $handle instanceof SupportAnswer ? 'success.delete' : 'danger.delete',
-                'support-answer.admin',
-                $handle
+                type: 'page.delete',
+                message: $handle instanceof SupportAnswer ? 'success.delete' : 'danger.delete',
+                domain: 'support-answer.admin',
+                arguments: $handle,
             );
 
             return $handle instanceof SupportAnswer ? $this->redirectToRoute('support-answer:admin.index') : $this->redirectToReferer();

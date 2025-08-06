@@ -30,7 +30,9 @@ use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerDTO;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerHandler;
 use BaksDev\Support\UseCase\Admin\New\SupportHandler;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -42,6 +44,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @group support-answer
  */
 #[When(env: 'test')]
+#[Group('support-answer')]
 class SupportAnswerNewTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void
@@ -65,19 +68,22 @@ class SupportAnswerNewTest extends KernelTestCase
 
     public function testUseCase(): void
     {
-
         /** SupportDTO */
-        $SupportAnswerDTO = new SupportAnswerDTO();
+        $SupportAnswerDTO = new SupportAnswerDTO(new UserProfileUid(UserProfileUid::TEST));
+        self::assertTrue($SupportAnswerDTO->getProfile()->equals(UserProfileUid::TEST));
+
         $SupportAnswerDTO->setTitle('New Test Title');
         self::assertSame('New Test Title', $SupportAnswerDTO->getTitle());
 
         $SupportAnswerDTO->setType(new TypeProfileUid(TypeProfileUid::TEST));
-        self::assertSame((new TypeProfileUid(TypeProfileUid::TEST))->getTypeProfileValue(), $SupportAnswerDTO->getType()->getTypeProfileValue());
+        self::assertTrue($SupportAnswerDTO->getType()->equals(TypeProfileUid::TEST));
+
 
         $SupportAnswerDTO->setContent('New Test Content');
         self::assertSame('New Test Content', $SupportAnswerDTO->getContent());
 
-        /** @var SupportHandler $SupportHandler */
+
+        /** @var SupportAnswerHandler $SupportAnswerHandler */
         $SupportAnswerHandler = self::getContainer()->get(SupportAnswerHandler::class);
         $handle = $SupportAnswerHandler->handle($SupportAnswerDTO);
 

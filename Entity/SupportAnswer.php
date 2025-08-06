@@ -25,18 +25,20 @@ declare(strict_types=1);
 
 namespace BaksDev\Support\Answer\Entity;
 
+use BaksDev\Core\Entity\EntityState;
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /* SupportAnswer */
 
 #[ORM\Entity]
 #[ORM\Table(name: 'support_answer')]
-class SupportAnswer
+class SupportAnswer extends EntityState
 {
     /**
      * Идентификатор сущности
@@ -57,13 +59,14 @@ class SupportAnswer
 
     /**
      * Тип профиля пользователей
-     * @var TypeProfileUid
      */
     #[Assert\Uuid]
     #[ORM\Column(type: TypeProfileUid::TYPE, nullable: true)]
     private ?TypeProfileUid $type;
 
-    /** Профиль пользователя */
+    /**
+     * Профиль пользователя
+     */
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: UserProfileUid::TYPE, nullable: true)]
@@ -79,58 +82,28 @@ class SupportAnswer
         return (string) $this->id;
     }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): self
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getType(): ?TypeProfileUid
-    {
-        return $this->type;
-    }
-
-    public function setType(?TypeProfileUid $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-
     public function getId(): SupportAnswerUid
     {
         return $this->id;
     }
 
-    public function getProfile(): UserProfileUid
+    public function getDto($dto): mixed
     {
-        return $this->profile;
+        if($dto instanceof SupportAnswerInterface)
+        {
+            return parent::getDto($dto);
+        }
+
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
 
-    public function setProfile(UserProfileUid $profile): self
+    public function setEntity($dto): mixed
     {
-        $this->profile = $profile;
-        return $this;
+        if($dto instanceof SupportAnswerInterface)
+        {
+            return parent::setEntity($dto);
+        }
+
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
-
-
 }

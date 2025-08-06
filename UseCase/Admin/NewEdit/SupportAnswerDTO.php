@@ -25,14 +25,15 @@ declare(strict_types=1);
 
 namespace BaksDev\Support\Answer\UseCase\Admin\NewEdit;
 
+use BaksDev\Support\Answer\Entity\SupportAnswerInterface;
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class SupportAnswerDTO
+final class SupportAnswerDTO implements SupportAnswerInterface
 {
-    
+
     /**
      * Идентификатор
      */
@@ -47,6 +48,7 @@ final class SupportAnswerDTO
 
     /**
      * Тип профиля пользователей
+     *
      * @var TypeProfileUid
      */
     #[Assert\Uuid]
@@ -113,5 +115,5 @@ final class SupportAnswerDTO
     {
         return $this->profile;
     }
-    
+
 }
