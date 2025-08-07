@@ -90,7 +90,7 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
 
         /* Выбрать ответы только текущего профиля */
         $dbal
-            ->andWhere('support_answer.profile = :profile')
+            ->andWhere('support_answer.profile = :profile OR support_answer.profile IS NULL')
             ->setParameter(
                 key: 'profile',
                 value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
