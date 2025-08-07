@@ -26,8 +26,21 @@ declare(strict_types=1);
 namespace BaksDev\Support\Answer\Repository\UserProfileTypeAnswers;
 
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Generator;
 
 interface UserProfileTypeAnswersInterface
 {
-    public function findUserProfileTypeAnswers(TypeProfileUid|string $type): array;
+    public function forProfile(UserProfileUid|UserProfile $profile): self;
+
+    /**
+     * Метод возвращает все ответы по указанному типу профиля, а также все ответы без типа профиля
+     * (support_answer.type IS NULL)
+     *
+     * @param TypeProfileUid $type
+     *
+     * @return Generator<int, UserProfileTypeAnswersResult>|false
+     */
+    public function findAll(TypeProfileUid|string $type): Generator|false;
 }

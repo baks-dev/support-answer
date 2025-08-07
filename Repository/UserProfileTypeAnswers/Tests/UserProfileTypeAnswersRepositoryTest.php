@@ -23,8 +23,13 @@
 
 namespace BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\Tests;
 
+use BaksDev\Ozon\Orders\Type\ProfileType\TypeProfileFbsOzon;
 use BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\UserProfileTypeAnswersInterface;
+use BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\UserProfileTypeAnswersResult;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -37,16 +42,27 @@ class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
         /** @var UserProfileTypeAnswersInterface $UserProfileTypeAnswersInterface */
         $UserProfileTypeAnswersInterface = self::getContainer()->get(UserProfileTypeAnswersInterface::class);
 
-        $response = $UserProfileTypeAnswersInterface->findUserProfileTypeAnswers(TypeProfileUid::TEST);
 
-        if(count($response))
+        $result = $UserProfileTypeAnswersInterface
+            ->forProfile(new UserProfileUid())
+            ->findAll(new TypeProfileUid(TypeProfileFbsOzon::TYPE));
+
+        foreach($result as $UserProfileTypeAnswersResult)
         {
-            $current = current($response);
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(UserProfileTypeAnswersResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
-            self::assertTrue(property_exists($current,"id"));
-            self::assertTrue(property_exists($current,"title"));
-            self::assertTrue(property_exists($current,"type"));
-            self::assertTrue(property_exists($current,"content"));
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $value = $method->invoke($UserProfileTypeAnswersResult);
+                    // dump($value);
+                }
+            }
         }
 
         self::assertTrue(true);
