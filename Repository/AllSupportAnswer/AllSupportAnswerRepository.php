@@ -34,6 +34,7 @@ use BaksDev\Users\Profile\TypeProfile\Entity\Event\TypeProfileEvent;
 use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
 use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
@@ -42,6 +43,8 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
     private SearchDTO|false $search = false;
 
     private SupportAnswerTypeProfileFilterDTO|false $filter = false;
+
+    private UserProfileUid|false $profile = false;
 
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
@@ -61,6 +64,18 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
         return $this;
     }
 
+    public function forProfile(UserProfileUid|UserProfile $profile): self
+    {
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
     /** Метод возвращает пагинатор SupportAnswer */
     public function findPaginator(): PaginatorInterface
     {
@@ -68,28 +83,20 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $dbal->select('support_answer.id');
-        $dbal->addSelect('support_answer.title');
-
         $dbal
-            ->addSelect('
-            COALESCE(
-                support_answer.type,
-                NULL
-            ) AS type
-        ');
-
-        $dbal->addSelect('support_answer.content');
-
-        $dbal->from(SupportAnswer::class, 'support_answer');
+            ->select('support_answer.id')
+            ->addSelect('support_answer.title')
+            ->addSelect('support_answer.type')
+            ->addSelect('support_answer.content')
+            ->from(SupportAnswer::class, 'support_answer');
 
         /* Задать профиль текущего пользователя */
         $dbal
-            ->where('support_answer.profile = :profile')
+            ->where('support_answer.profile = :profile OR support_answer.profile IS NULL')
             ->setParameter(
-                'profile',
-                $this->UserProfileTokenStorage->getProfileCurrent(),
-                UserProfileUid::TYPE
+                key: 'profile',
+                value: $this->profile instanceof UserProfileUid ? $this->profile : $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
             );
 
 
@@ -97,7 +104,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
             'support_answer',
             TypeProfile::class,
             'profile',
-            'profile.id = support_answer.type'
+            'profile.id = support_answer.type',
         );
 
         /* TypeProfile Event */
@@ -105,7 +112,7 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
             'profile',
             TypeProfileEvent::class,
             'profile_event',
-            'profile_event.id = profile.event'
+            'profile_event.id = profile.event',
         );
 
         /* TypeProfile Translate */
@@ -115,10 +122,10 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
                 'profile',
                 TypeProfileTrans::class,
                 'profile_trans',
-                'profile_trans.event = profile.event AND profile_trans.local = :local'
+                'profile_trans.event = profile.event AND profile_trans.local = :local',
             );
 
-        if($this->filter && !is_null($this->filter->getType()))
+        if(($this->filter instanceof SupportAnswerTypeProfileFilterDTO) && $this->filter->getType() instanceof TypeProfileUid)
         {
             if($this->filter->getType() !== TypeProfileUid::TEST)
             {
@@ -127,22 +134,13 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
                     ->setParameter(
                         'type',
                         $this->filter->getType(),
-                        TypeProfileUid::TYPE
+                        TypeProfileUid::TYPE,
                     );
-            }
-            else
-            {
-                /**
-                 * Выбрать ответ с НЕ выбранным типом профиля пользователя
-                 */
-                $dbal
-                    ->andWhere('support_answer.type IS NULL')
-                ;
             }
         }
 
         /* Поиск */
-        if($this->search->getQuery())
+        if(($this->search instanceof SearchDTO) && $this->search->getQuery())
         {
             $dbal
                 ->createSearchQueryBuilder($this->search)
@@ -150,9 +148,9 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
                 ->addSearchLike('support_answer.title');
         }
 
-        $dbal
-            ->orderBy('support_answer.title');
-        return $this->paginator->fetchAllAssociative($dbal);
+        $dbal->orderBy('support_answer.title');
+
+        return $this->paginator->fetchAllHydrate($dbal, AllSupportAnswerResult::class);
     }
 
 }

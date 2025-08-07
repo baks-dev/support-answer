@@ -28,13 +28,17 @@ use BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\UserProfileTypeAnsw
 use BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\UserProfileTypeAnswersResult;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use PHPUnit\Framework\Attributes\Group;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group support-answer
  */
+#[Group('support-answer')]
+#[When(env: 'test')]
 class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
 {
     public function testUseCase(): void

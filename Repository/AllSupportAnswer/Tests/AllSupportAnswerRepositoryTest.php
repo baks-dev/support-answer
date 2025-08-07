@@ -25,11 +25,19 @@ namespace BaksDev\Support\Answer\Repository\AllSupportAnswer\Tests;
 
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Support\Answer\Repository\AllSupportAnswer\AllSupportAnswerInterface;
+use BaksDev\Support\Answer\Repository\AllSupportAnswer\AllSupportAnswerResult;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group support-answer
  */
+#[Group('support-answer')]
+#[When(env: 'test')]
 class AllSupportAnswerRepositoryTest extends KernelTestCase
 {
     public function testUseCase(): void
@@ -38,18 +46,28 @@ class AllSupportAnswerRepositoryTest extends KernelTestCase
         /** @var AllSupportAnswerInterface $AllSupportAnswerRepositoryInterface */
         $AllSupportAnswerRepositoryInterface = self::getContainer()->get(AllSupportAnswerInterface::class);
 
-        $response = $AllSupportAnswerRepositoryInterface
+        $result = $AllSupportAnswerRepositoryInterface
+            ->forProfile(new UserProfileUid(UserProfileUid::TEST))
             ->search(new SearchDTO())
-            ->findPaginator();
+            ->findPaginator()
+            ->getData();
 
-        if(!empty($response->getData()))
+        foreach($result as $AllSupportAnswerResult)
         {
-            $current = current($response->getData());
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(AllSupportAnswerResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
-            self::assertTrue(array_key_exists("id", $current));
-            self::assertTrue(array_key_exists("title", $current));
-            self::assertTrue(array_key_exists("name", $current));
-            self::assertTrue(array_key_exists("content", $current));
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $value = $method->invoke($AllSupportAnswerResult);
+                    // dump($value);
+                }
+            }
         }
 
         self::assertTrue(true);

@@ -46,7 +46,6 @@ final class IndexController extends AbstractController
     public function index(
         Request $request,
         AllSupportAnswerInterface $allSupport,
-        TokenUserGenerator $tokenUserGenerator,
         int $page = 0,
     ): Response
     {

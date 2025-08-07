@@ -26,12 +26,16 @@ namespace BaksDev\Support\Answer\Repository\AllSupportAnswer;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterDTO;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 interface AllSupportAnswerInterface
 {
     public function search(SearchDTO $search): self;
 
     public function filter(SupportAnswerTypeProfileFilterDTO $filter): self;
+
+    public function forProfile(UserProfileUid|UserProfile $profile): self;
 
     /** Метод возвращает пагинатор SupportAnswer */
     public function findPaginator(): PaginatorInterface;
