@@ -81,7 +81,7 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
 
         /* В выборке должны быть ответы по выбранному типу, а также с НЕ выбранным типом */
         $dbal
-            ->andWhere('(support_answer.type = :type OR support_answer.type IS NULL)')
+            ->where('(support_answer.type = :type OR support_answer.type IS NULL)')
             ->setParameter(
                 key: 'type',
                 value: $type,
