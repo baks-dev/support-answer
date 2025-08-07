@@ -38,7 +38,7 @@ use Generator;
 
 class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterface
 {
-    private UserProfileUid|false $profile;
+    private UserProfileUid|false $profile = false;
 
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,

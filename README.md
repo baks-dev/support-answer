@@ -1,6 +1,6 @@
 # BaksDev Support Answer
 
-[![Version](https://img.shields.io/badge/version-7.2.10-blue)](https://github.com/baks-dev/support-answer/releases)
+[![Version](https://img.shields.io/badge/version-7.2.11-blue)](https://github.com/baks-dev/support-answer/releases)
 ![php 8.4+](https://img.shields.io/badge/php-min%208.4-red.svg)
 
 Модуль быстрых ответов техподдержки
