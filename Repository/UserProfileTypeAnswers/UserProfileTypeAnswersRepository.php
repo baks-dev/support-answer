@@ -40,6 +40,8 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
 {
     private UserProfileUid|false $profile = false;
 
+    private TypeProfileUid|false $type = false;
+
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
@@ -57,17 +59,38 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
         return $this;
     }
 
+    public function forType(TypeProfile|TypeProfileUid|string|null $type): self
+    {
+        if(empty($type))
+        {
+            $this->type = false;
+            return $this;
+        }
+
+        if(is_string($type))
+        {
+            $type = new TypeProfileUid($type);
+        }
+
+        if($type instanceof TypeProfile)
+        {
+            $type = $type->getId();
+        }
+
+        $this->type = $type;
+
+        return $this;
+    }
+
+
     /**
      * Метод возвращает все ответы по указанному типу профиля, а также все ответы без типа профиля
      * (support_answer.type IS NULL)
      *
-     * @param TypeProfileUid $type
-     *
      * @return Generator<int, UserProfileTypeAnswersResult>|false
      */
-    public function findAll(TypeProfileUid|string $type): Generator|false
+    public function findAll(): Generator|false
     {
-
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
@@ -79,23 +102,40 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
             ->addSelect('support_answer.type')
             ->from(SupportAnswer::class, 'support_answer');
 
-        /* В выборке должны быть ответы по выбранному типу, а также с НЕ выбранным типом */
-        $dbal
-            ->where('(support_answer.type = :type OR support_answer.type IS NULL)')
-            ->setParameter(
-                key: 'type',
-                value: $type,
-                type: TypeProfileUid::TYPE,
-            );
+        /**
+         * В выборке должны быть ответы по выбранному типу либо общие
+         */
 
-        /* Выбрать ответы только текущего профиля */
-        $dbal
-            ->andWhere('support_answer.profile = :profile OR support_answer.profile IS NULL')
-            ->setParameter(
-                key: 'profile',
-                value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
-                type: UserProfileUid::TYPE,
-            );
+        $dbal->where('support_answer.type IS NULL');
+
+        if(true === ($this->type instanceof TypeProfileUid))
+        {
+            $dbal
+                ->orWhere('support_answer.type = :type')
+                ->setParameter(
+                    key: 'type',
+                    value: $this->type,
+                    type: TypeProfileUid::TYPE,
+                );
+        }
+
+        /**
+         * Выбрать ответы только текущего профиля либо общие
+         */
+
+        $dbal->andWhere('support_answer.profile IS NULL');
+
+        if(true === ($this->profile instanceof UserProfileUid))
+        {
+            $dbal
+                ->orWhere('support_answer.profile = :profile')
+                ->setParameter(
+                    key: 'profile',
+                    value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
+                    type: UserProfileUid::TYPE,
+                );
+        }
+
 
         $dbal->leftJoin(
             'support_answer',
@@ -125,6 +165,5 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
         $dbal->orderBy('support_answer.title');
 
         return $dbal->fetchAllHydrate(UserProfileTypeAnswersResult::class);
-
     }
 }

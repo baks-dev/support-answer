@@ -49,7 +49,8 @@ class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
 
         $result = $UserProfileTypeAnswersInterface
             ->forProfile(new UserProfileUid())
-            ->findAll(new TypeProfileUid(TypeProfileFbsOzon::TYPE));
+            ->forType(new TypeProfileUid(TypeProfileFbsOzon::TYPE))
+            ->findAll();
 
         foreach($result as $UserProfileTypeAnswersResult)
         {
