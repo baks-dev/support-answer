@@ -34,9 +34,6 @@ use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group support-answer
- */
 #[Group('support-answer')]
 #[When(env: 'test')]
 class UserProfileTypeAnswersRepositoryTest extends KernelTestCase

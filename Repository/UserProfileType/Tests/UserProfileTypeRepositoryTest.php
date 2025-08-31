@@ -24,11 +24,12 @@
 namespace BaksDev\Support\Answer\Repository\UserProfileType\Tests;
 
 use BaksDev\Support\Answer\Repository\UserProfileType\UserProfileTypeInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group support-answer
- */
+#[Group('support-answer')]
+#[When(env: 'test')]
 class UserProfileTypeRepositoryTest extends KernelTestCase
 {
     public function testUseCase(): void

@@ -40,11 +40,8 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group support-answer
- */
-#[When(env: 'test')]
 #[Group('support-answer')]
+#[When(env: 'test')]
 class SupportAnswerNewTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void

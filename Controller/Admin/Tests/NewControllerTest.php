@@ -24,12 +24,11 @@
 namespace BaksDev\Support\Answer\Controller\Admin\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group support-answer
- */
+#[Group('support-answer')]
 #[When(env: 'test')]
 final class NewControllerTest extends WebTestCase
 {

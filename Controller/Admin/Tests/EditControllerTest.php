@@ -24,17 +24,16 @@
 namespace BaksDev\Support\Answer\Controller\Admin\Tests;
 
 use BaksDev\Support\Answer\Entity\SupportAnswer;
+use BaksDev\Support\Answer\UseCase\Admin\NewEdit\Tests\SupportAnswerNewTest;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group support-answer
- *
- * @depends BaksDev\Support\Answer\UseCase\Admin\NewEdit\Tests\SupportAnswerNewTest::class
- */
+#[Group('support-answer')]
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
@@ -42,9 +41,9 @@ final class EditControllerTest extends WebTestCase
 
     private const string ROLE = 'ROLE_SUPPORT_EDIT';
 
+    #[DependsOnClass(SupportAnswerNewTest::class)]
     public static function setUpBeforeClass(): void
     {
-
         /**
          * @var EntityManagerInterface $em
          *
@@ -64,7 +63,8 @@ final class EditControllerTest extends WebTestCase
     }
 
 
-    /** Доступ по роли  */
+    /** Доступ по роли */
+    #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -85,6 +85,7 @@ final class EditControllerTest extends WebTestCase
 
 
     /** Доступ по роли ROLE_ADMIN */
+    #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -104,6 +105,7 @@ final class EditControllerTest extends WebTestCase
     }
 
     /** Доступ по роли ROLE_USER */
+    #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleUserFiled(): void
     {
         self::ensureKernelShutdown();
@@ -123,6 +125,7 @@ final class EditControllerTest extends WebTestCase
     }
 
     /** Доступ без роли */
+    #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testGuestFiled(): void
     {
         self::ensureKernelShutdown();

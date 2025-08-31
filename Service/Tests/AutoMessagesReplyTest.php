@@ -28,13 +28,11 @@ namespace BaksDev\Support\Answer\Service\Tests;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Support\Answer\Service\AutoMessagesReply;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-
-/**
- * @group support-answer
- */
+#[Group('support-answer')]
 #[When(env: 'test')]
 class AutoMessagesReplyTest extends KernelTestCase
 {
