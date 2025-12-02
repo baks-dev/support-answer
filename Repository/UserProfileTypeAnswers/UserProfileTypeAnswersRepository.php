@@ -123,18 +123,14 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
          * Выбрать ответы только текущего профиля либо общие
          */
 
-        $dbal->andWhere('support_answer.profile IS NULL');
 
-        if(true === ($this->profile instanceof UserProfileUid))
-        {
-            $dbal
-                ->orWhere('support_answer.profile = :profile')
-                ->setParameter(
-                    key: 'profile',
-                    value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
-                    type: UserProfileUid::TYPE,
-                );
-        }
+        $dbal
+            ->andWhere('(support_answer.profile IS NULL OR support_answer.profile = :profile)')
+            ->setParameter(
+                key: 'profile',
+                value: $this->profile instanceof UserProfileUid ? $this->profile : $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
+            );
 
 
         $dbal->leftJoin(
