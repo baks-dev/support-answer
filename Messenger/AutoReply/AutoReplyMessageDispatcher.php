@@ -50,7 +50,7 @@ final readonly class AutoReplyMessageDispatcher
 {
 
     public function __construct(
-        #[Target('ozonSupportLogger')] private LoggerInterface $logger,
+        #[Target('supportLogger')] private LoggerInterface $logger,
         private SupportHandler $SupportHandler,
         private CurrentSupportEventRepository $CurrentSupportEventRepository,
     ) {}
