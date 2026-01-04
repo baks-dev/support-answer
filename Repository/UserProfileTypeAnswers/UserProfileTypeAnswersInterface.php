@@ -41,9 +41,7 @@ interface UserProfileTypeAnswersInterface
      * Метод возвращает все ответы по указанному типу профиля, а также все ответы без типа профиля
      * (support_answer.type IS NULL)
      *
-     * @param TypeProfileUid $type
-     *
-     * @return Generator<int, UserProfileTypeAnswersResult>|false
+     * @return Generator<UserProfileTypeAnswersResult>|false
      */
     public function findAll(): Generator|false;
 }

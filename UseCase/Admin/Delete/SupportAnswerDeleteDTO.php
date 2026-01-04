@@ -23,12 +23,12 @@
 
 namespace BaksDev\Support\Answer\UseCase\Admin\Delete;
 
+use BaksDev\Support\Answer\Entity\SupportAnswerInterface;
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class SupportAnswerDeleteDTO
+final class SupportAnswerDeleteDTO implements SupportAnswerInterface
 {
-    
     /**
      * Идентификатор
      */

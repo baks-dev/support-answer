@@ -55,6 +55,8 @@ final class DeleteControllerTest extends WebTestCase
 
         if(empty($supportAnswer))
         {
+            echo 'Сообщения для удаления не найдено '.self::class.':'.__LINE__.PHP_EOL;
+
             self::assertNull($supportAnswer);
             return;
         }
@@ -67,6 +69,13 @@ final class DeleteControllerTest extends WebTestCase
     #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleSuccessful(): void
     {
+        self::assertTrue(true);
+
+        if(empty(self::$url))
+        {
+            return;
+        }
+
         self::ensureKernelShutdown();
         $client = static::createClient();
         $usr = TestUserAccount::getModer(self::ROLE);
@@ -80,7 +89,7 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
-        self::assertTrue(true);
+
     }
 
 
@@ -88,6 +97,13 @@ final class DeleteControllerTest extends WebTestCase
     #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleAdminSuccessful(): void
     {
+        self::assertTrue(true);
+
+        if(empty(self::$url))
+        {
+            return;
+        }
+
         self::ensureKernelShutdown();
         $client = static::createClient();
         $usr = TestUserAccount::getAdmin();
@@ -100,14 +116,19 @@ final class DeleteControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
-
-        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_USER */
     #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testRoleUserFiled(): void
     {
+        self::assertTrue(true);
+
+        if(empty(self::$url))
+        {
+            return;
+        }
+
         self::ensureKernelShutdown();
         $client = static::createClient();
         $usr = TestUserAccount::getUsr();
@@ -121,13 +142,19 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
         }
 
-        self::assertTrue(true);
     }
 
     /** Доступ без роли */
     #[DependsOnClass(SupportAnswerNewTest::class)]
     public function testGuestFiled(): void
     {
+        self::assertTrue(true);
+
+        if(empty(self::$url))
+        {
+            return;
+        }
+
         self::ensureKernelShutdown();
         $client = static::createClient();
 
@@ -139,7 +166,5 @@ final class DeleteControllerTest extends WebTestCase
             // Full authentication is required to access this resource
             self::assertResponseStatusCodeSame(401);
         }
-
-        self::assertTrue(true);
     }
 }
