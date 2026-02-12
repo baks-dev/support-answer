@@ -28,7 +28,7 @@ namespace BaksDev\Support\Answer\Repository\AllSupportAnswer;
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 
-final class AllSupportAnswerResult
+final readonly class AllSupportAnswerResult
 {
     public function __construct(
         private string $id, //" => "01988136-5c1d-7d3b-bbbf-d32d75260f80"

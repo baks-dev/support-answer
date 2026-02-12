@@ -28,52 +28,54 @@ namespace BaksDev\Support\Answer\UseCase\Admin\NewEdit\Tests;
 use BaksDev\Support\Answer\Entity\SupportAnswer;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerDTO;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerHandler;
-use BaksDev\Support\UseCase\Admin\New\SupportHandler;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('support-answer')]
+#[Group('support-answer-usecase')]
 #[When(env: 'test')]
 class SupportAnswerNewTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void
     {
+        /** @var EntityManagerInterface $EntityManager */
+        $EntityManager = self::getContainer()->get(EntityManagerInterface::class);
 
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-
-        $supportAnswer = $em->getRepository(SupportAnswer::class)
+        $supportAnswer = $EntityManager
+            ->getRepository(SupportAnswer::class)
             ->findOneBy(['type' => TypeProfileUid::TEST]);
 
-        if($supportAnswer)
+        if(false === empty($supportAnswer))
         {
-            $em->remove($supportAnswer);
+            $EntityManager->remove($supportAnswer);
         }
 
-        $em->flush();
-        $em->clear();
+        $EntityManager->flush();
+        $EntityManager->clear();
     }
 
 
     public function testUseCase(): void
     {
         /** SupportDTO */
-        $SupportAnswerDTO = new SupportAnswerDTO(new UserProfileUid(UserProfileUid::TEST));
-        self::assertTrue($SupportAnswerDTO->getProfile()->equals(UserProfileUid::TEST));
+        $SupportAnswerDTO = new SupportAnswerDTO()->setProfile(new UserProfileUid(UserProfileUid::TEST));
+        self::assertTrue($SupportAnswerDTO
+            ->getProfile()
+            ->equals(UserProfileUid::TEST)
+        );
 
         $SupportAnswerDTO->setTitle('New Test Title');
         self::assertSame('New Test Title', $SupportAnswerDTO->getTitle());
 
         $SupportAnswerDTO->setType(new TypeProfileUid(TypeProfileUid::TEST));
-        self::assertTrue($SupportAnswerDTO->getType()->equals(TypeProfileUid::TEST));
+        self::assertTrue($SupportAnswerDTO
+            ->getType()
+            ->equals(TypeProfileUid::TEST)
+        );
 
 
         $SupportAnswerDTO->setContent('New Test Content');
@@ -85,6 +87,5 @@ class SupportAnswerNewTest extends KernelTestCase
         $handle = $SupportAnswerHandler->handle($SupportAnswerDTO);
 
         self::assertTrue(($handle instanceof SupportAnswer), $handle.': Ошибка SupportAnswer');
-
     }
 }

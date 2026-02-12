@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Support\Answer\Repository\AllSupportAnswer;
 
 use BaksDev\Core\Form\Search\SearchDTO;

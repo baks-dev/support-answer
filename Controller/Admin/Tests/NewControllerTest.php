@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Support\Answer\Controller\Admin\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
@@ -29,6 +31,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('support-answer')]
+#[Group('support-answer-controller')]
 #[When(env: 'test')]
 final class NewControllerTest extends WebTestCase
 {
@@ -45,7 +48,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
-        $client = static::createClient();
+        $client = self::createClient();
 
         $usr = TestUserAccount::getModer(self::ROLE);
 
@@ -66,7 +69,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
-        $client = static::createClient();
+        $client = self::createClient();
         $usr = TestUserAccount::getAdmin();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -85,7 +88,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleUserFiled(): void
     {
         self::ensureKernelShutdown();
-        $client = static::createClient();
+        $client = self::createClient();
         $usr = TestUserAccount::getUsr();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -104,7 +107,7 @@ final class NewControllerTest extends WebTestCase
     public function testGuestFiled(): void
     {
         self::ensureKernelShutdown();
-        $client = static::createClient();
+        $client = self::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
         {

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Support\Answer\Controller\Admin;
 
-use BaksDev\Centrifugo\Services\Token\TokenUserGenerator;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
@@ -33,6 +32,7 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterDTO;
 use BaksDev\Support\Answer\Form\Admin\Index\SupportAnswerTypeProfileFilterForm;
 use BaksDev\Support\Answer\Repository\AllSupportAnswer\AllSupportAnswerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -45,7 +45,8 @@ final class IndexController extends AbstractController
     #[Route('/admin/support/answers/{page<\d+>}', name: 'admin.index', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
-        AllSupportAnswerInterface $allSupport,
+        AllSupportAnswerInterface $AllSupportRepository,
+        Security $Security,
         int $page = 0,
     ): Response
     {
@@ -74,10 +75,21 @@ final class IndexController extends AbstractController
             )
             ->handleRequest($request);
 
+
+        /**
+         * Если профиль не админ - выбрать ответы только текущего профиля либо общие
+         * Если профиль админ - выбрать для любых профилей
+         */
+        if(false === $Security->isGranted('ROLE_ADMIN'))
+        {
+            $AllSupportRepository->forProfile($this->getProfileUid());
+        }
+
+
         /**
          * Список ответов
          */
-        $SupportAnswer = $allSupport
+        $SupportAnswer = $AllSupportRepository
             ->search($search)
             ->filter($filter)
             ->findPaginator();

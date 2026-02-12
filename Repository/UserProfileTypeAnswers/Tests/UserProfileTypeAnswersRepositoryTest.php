@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Support\Answer\Repository\UserProfileTypeAnswers\Tests;
 
 use BaksDev\Ozon\Orders\Type\ProfileType\TypeProfileFbsOzon;
@@ -35,6 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('support-answer')]
+#[Group('support-answer-repository')]
 #[When(env: 'test')]
 class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
 {
@@ -43,13 +46,12 @@ class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
         /** @var UserProfileTypeAnswersInterface $UserProfileTypeAnswersInterface */
         $UserProfileTypeAnswersInterface = self::getContainer()->get(UserProfileTypeAnswersInterface::class);
 
-
         $result = $UserProfileTypeAnswersInterface
             ->forProfile(new UserProfileUid())
             ->forType(new TypeProfileUid(TypeProfileFbsOzon::TYPE))
             ->findAll();
 
-        foreach($result as $UserProfileTypeAnswersResult)
+        foreach($result as $userProfileTypeAnswersResult)
         {
             // Вызываем все геттеры
             $reflectionClass = new ReflectionClass(UserProfileTypeAnswersResult::class);
@@ -61,7 +63,7 @@ class UserProfileTypeAnswersRepositoryTest extends KernelTestCase
                 if($method->getNumberOfParameters() === 0)
                 {
                     // Вызываем метод
-                    $value = $method->invoke($UserProfileTypeAnswersResult);
+                    $value = $method->invoke($userProfileTypeAnswersResult);
                     // dump($value);
                 }
             }

@@ -35,7 +35,6 @@ use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
 use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 final class AllSupportAnswerRepository implements AllSupportAnswerInterface
@@ -49,7 +48,6 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
-        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
     ) {}
 
     public function search(SearchDTO $search): self
@@ -90,14 +88,21 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
             ->addSelect('support_answer.content')
             ->from(SupportAnswer::class, 'support_answer');
 
-        /* Задать профиль текущего пользователя */
-        $dbal
-            ->where('support_answer.profile = :profile OR support_answer.profile IS NULL')
-            ->setParameter(
-                key: 'profile',
-                value: $this->profile instanceof UserProfileUid ? $this->profile : $this->UserProfileTokenStorage->getProfile(),
-                type: UserProfileUid::TYPE,
-            );
+
+        /**
+         * Если профиль не админ (указан) - выбрать ответы только текущего профиля либо общие
+         * Если профиль админ (не указан) - выбрать для любых профилей
+         */
+        if($this->profile instanceof UserProfileUid)
+        {
+            $dbal
+                ->where('support_answer.profile = :profile OR support_answer.profile IS NULL')
+                ->setParameter(
+                    key: 'profile',
+                    value: $this->profile,
+                    type: UserProfileUid::TYPE,
+                );
+        }
 
 
         $dbal->leftJoin(

@@ -15,7 +15,7 @@
                 </h1>
             </div>
 
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPPORT_NEW') %}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPPORT_ADD') %}
                 <a href="{{ path('support-answer:admin.newedit.new') }}"
                    title="Добавить ответ"
                    class="btn btn-primary disabled"

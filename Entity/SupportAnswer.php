@@ -67,10 +67,9 @@ class SupportAnswer extends EntityState
     /**
      * Профиль пользователя
      */
-    #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: UserProfileUid::TYPE, nullable: true)]
-    private UserProfileUid $profile;
+    private ?UserProfileUid $profile;
 
     public function __construct()
     {

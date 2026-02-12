@@ -27,7 +27,6 @@ namespace BaksDev\Support\Answer\Repository\UserProfileTypeAnswers;
 
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /** @see UserProfileTypeAnswersResult */
 final readonly class UserProfileTypeAnswersResult
