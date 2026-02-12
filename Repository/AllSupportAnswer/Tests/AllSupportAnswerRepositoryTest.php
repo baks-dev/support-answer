@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Support\Answer\Repository\AllSupportAnswer\Tests;
 
 use BaksDev\Core\Form\Search\SearchDTO;
@@ -34,6 +36,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('support-answer')]
+#[Group('support-answer-repository')]
 #[When(env: 'test')]
 class AllSupportAnswerRepositoryTest extends KernelTestCase
 {
@@ -49,7 +52,7 @@ class AllSupportAnswerRepositoryTest extends KernelTestCase
             ->findPaginator()
             ->getData();
 
-        foreach($result as $AllSupportAnswerResult)
+        foreach($result as $allSupportAnswerResult)
         {
             // Вызываем все геттеры
             $reflectionClass = new ReflectionClass(AllSupportAnswerResult::class);
@@ -61,8 +64,8 @@ class AllSupportAnswerRepositoryTest extends KernelTestCase
                 if($method->getNumberOfParameters() === 0)
                 {
                     // Вызываем метод
-                    $value = $method->invoke($AllSupportAnswerResult);
-                    // dump($value);
+                    $value = $method->invoke($allSupportAnswerResult);
+//                     dump($value);
                 }
             }
         }

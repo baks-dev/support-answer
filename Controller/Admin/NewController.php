@@ -31,6 +31,7 @@ use BaksDev\Support\Answer\Entity\SupportAnswer;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerDTO;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerForm;
 use BaksDev\Support\Answer\UseCase\Admin\NewEdit\SupportAnswerHandler;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -40,19 +41,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[RoleSecurity('ROLE_SUPPORT_ADD')]
 final class NewController extends AbstractController
 {
-    #[Route('/admin/support/answer/new/{id}', name: 'admin.newedit.new', defaults: ['id' => null], methods: ['GET', 'POST'])]
+    #[Route(
+        '/admin/support/answer/new/{id}',
+        name: 'admin.newedit.new',
+        defaults: ['id' => null],
+        methods: ['GET', 'POST']
+    )]
     public function news(
         Request $request,
-        SupportAnswerHandler $supportAnswerHandler,
+        SupportAnswerHandler $SupportAnswerHandler,
+        Security $Security,
     ): Response
     {
-        $SupportAnswerDTO = new SupportAnswerDTO($this->getCurrentProfileUid());
+        $supportAnswerDTO = new SupportAnswerDTO();
+
+        /**
+         * Если пользователь админ - ответ будет в дальнейшем отображаться у всех профилей, если нет - только у данного
+         * профиля
+         */
+        if(false === $Security->isGranted('ROLE_ADMIN'))
+        {
+            $supportAnswerDTO->setProfile($this->getCurrentProfileUid());
+        }
+
 
         /** Форма */
         $form = $this
             ->createForm(
                 type: SupportAnswerForm::class,
-                data: $SupportAnswerDTO,
+                data: $supportAnswerDTO,
                 options: ['action' => $this->generateUrl('support-answer:admin.newedit.new'),],
             )
             ->handleRequest($request);
@@ -61,7 +78,7 @@ final class NewController extends AbstractController
         {
             $this->refreshTokenForm($form);
 
-            $handle = $supportAnswerHandler->handle($SupportAnswerDTO);
+            $handle = $SupportAnswerHandler->handle($supportAnswerDTO);
 
             $this->addFlash
             (

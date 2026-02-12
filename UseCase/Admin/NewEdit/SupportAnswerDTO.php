@@ -58,11 +58,6 @@ final class SupportAnswerDTO implements SupportAnswerInterface
     #[Assert\Uuid]
     private ?UserProfileUid $profile = null;
 
-    public function __construct(UserProfileUid $profile)
-    {
-        $this->profile = $profile;
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;
@@ -111,9 +106,14 @@ final class SupportAnswerDTO implements SupportAnswerInterface
         return $this;
     }
 
-    public function getProfile(): UserProfileUid
+    public function getProfile(): ?UserProfileUid
     {
         return $this->profile;
     }
 
+    public function setProfile(?UserProfileUid $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
+    }
 }

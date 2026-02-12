@@ -32,7 +32,6 @@ use BaksDev\Users\Profile\TypeProfile\Entity\Trans\TypeProfileTrans;
 use BaksDev\Users\Profile\TypeProfile\Entity\TypeProfile;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Generator;
 
@@ -42,10 +41,7 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
 
     private TypeProfileUid|false $type = false;
 
-    public function __construct(
-        private readonly DBALQueryBuilder $DBALQueryBuilder,
-        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
-    ) {}
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function forProfile(UserProfileUid|UserProfile $profile): self
     {
@@ -120,18 +116,20 @@ class UserProfileTypeAnswersRepository implements UserProfileTypeAnswersInterfac
         }
 
         /**
-         * Выбрать ответы только текущего профиля либо общие
+         * Если профиль не админ (указан) - выбрать ответы только текущего профиля либо общие
+         * Если профиль админ (не указан) - выбрать для любых профилей
          */
 
-
-        $dbal
-            ->andWhere('(support_answer.profile IS NULL OR support_answer.profile = :profile)')
-            ->setParameter(
-                key: 'profile',
-                value: $this->profile instanceof UserProfileUid ? $this->profile : $this->UserProfileTokenStorage->getProfile(),
-                type: UserProfileUid::TYPE,
-            );
-
+        if($this->profile instanceof UserProfileUid)
+        {
+            $dbal
+                ->andWhere('(support_answer.profile IS NULL OR support_answer.profile = :profile)')
+                ->setParameter(
+                    key: 'profile',
+                    value: $this->profile,
+                    type: UserProfileUid::TYPE,
+                );
+        }
 
         $dbal->leftJoin(
             'support_answer',

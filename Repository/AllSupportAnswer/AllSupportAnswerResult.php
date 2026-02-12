@@ -27,8 +27,9 @@ namespace BaksDev\Support\Answer\Repository\AllSupportAnswer;
 
 use BaksDev\Support\Answer\Type\Id\SupportAnswerUid;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
-final class AllSupportAnswerResult
+final readonly class AllSupportAnswerResult
 {
     public function __construct(
         private string $id, //" => "01988136-5c1d-7d3b-bbbf-d32d75260f80"
@@ -36,6 +37,7 @@ final class AllSupportAnswerResult
         private string $content, //" => "Содержимое ответа"
         private ?string $type, //" => "c024b3d2-1866-72c3-83e9-922f8678bf23"
         private ?string $name, //" => "Ozon"
+        private ?string $profile,
     ) {}
 
     public function getId(): SupportAnswerUid
@@ -63,4 +65,8 @@ final class AllSupportAnswerResult
         return $this->content;
     }
 
+    public function getProfile(): ?UserProfileUid
+    {
+        return false === empty($this->profile) ? new UserProfileUid($this->profile) : null;
+    }
 }

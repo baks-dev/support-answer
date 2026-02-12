@@ -20,7 +20,7 @@
 <div id="usecase-{{ item.id }}-content" class="d-none">
     <ul class="leader list-group list-group-flush">
 
-        {% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN') or (is_granted(ROLE~'_EDIT') and item.profile != null) %}
             <li class="list-group-item d-flex justify-content-between bg-transparent border-0 text-truncate rounded-5">
                 <a href="{{ path('support-answer:admin.newedit.edit', {id: item.id }) }}"
                    class="text-decoration-none text-dark w-100 modal-link disabled"
