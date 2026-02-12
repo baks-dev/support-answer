@@ -96,12 +96,17 @@ final class AllSupportAnswerRepository implements AllSupportAnswerInterface
         if($this->profile instanceof UserProfileUid)
         {
             $dbal
+                ->addSelect('support_answer.profile')
                 ->where('support_answer.profile = :profile OR support_answer.profile IS NULL')
                 ->setParameter(
                     key: 'profile',
                     value: $this->profile,
                     type: UserProfileUid::TYPE,
                 );
+        }
+        else
+        {
+            $dbal->addSelect('NULL AS profile');
         }
 
 

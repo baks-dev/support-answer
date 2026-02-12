@@ -65,7 +65,7 @@ class AllSupportAnswerRepositoryTest extends KernelTestCase
                 {
                     // Вызываем метод
                     $value = $method->invoke($allSupportAnswerResult);
-                    // dump($value);
+//                     dump($value);
                 }
             }
         }

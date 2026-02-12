@@ -89,14 +89,14 @@ final class IndexController extends AbstractController
         /**
          * Список ответов
          */
-        $SupportAnswer = $AllSupportRepository
+        $supportAnswer = $AllSupportRepository
             ->search($search)
             ->filter($filter)
             ->findPaginator();
 
         return $this->render(
             [
-                'query' => $SupportAnswer,
+                'query' => $supportAnswer,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
             ],

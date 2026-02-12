@@ -4,10 +4,8 @@
 
 <tr class="vertical-middle" id="{{ item.id }}">
     <td class="text-nowrap">
-        {% if true == is_granted('ROLE_ADMIN') %}
-            {# Пользовательское меню #}
-            {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
-        {% endif %}
+        {# Пользовательское меню #}
+        {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
     </td>
 
     {# Тип профиля #}
