@@ -45,7 +45,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /** Пробуем автоматически ответить на однотипный вопрос о наличии */
-#[AsMessageHandler]
+#[AsMessageHandler(priority: 0)]
 final readonly class AutoReplyMessageDispatcher
 {
 
