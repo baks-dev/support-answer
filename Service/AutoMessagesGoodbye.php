@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace BaksDev\Support\Answer\Service;
 
 use Random\Randomizer;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+#[Autoconfigure(public: true)]
 final class AutoMessagesGoodbye
 {
     /**
