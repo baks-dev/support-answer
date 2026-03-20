@@ -47,19 +47,19 @@ final class SupportAnswerForm extends AbstractType
             ->add('content', TextareaType::class, ['required' => true]);
 
         $builder->add('type', ChoiceType::class, [
-                'choices' => $this->profileTypeRepository->findUserTypeProfiles(false), // все типы профили
-                'choice_value' => 'value',
-                'choice_label' => 'option',
-                'expanded' => false,
-                'multiple' => false,
-                'required' => false,
-            ]);
+            'choices' => $this->profileTypeRepository->findUserTypeProfiles(false), // все типы профили
+            'choice_value' => 'value',
+            'choice_label' => 'option',
+            'expanded' => false,
+            'multiple' => false,
+            'required' => false,
+        ]);
 
         /* Сохранить ******************************************************/
         $builder->add(
             'support_answer',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
         );
     }
 

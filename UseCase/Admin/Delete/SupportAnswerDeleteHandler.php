@@ -46,7 +46,7 @@ final class SupportAnswerDeleteHandler
         {
             return false;
         }
-        
+
         $this->entityManager->remove($SupportAnswer);
         $this->entityManager->flush();
 
@@ -55,7 +55,7 @@ final class SupportAnswerDeleteHandler
 
         $this->messageDispatch->dispatch(
             message: $message,
-            transport: 'support-answer'
+            transport: 'support-answer',
         );
 
         return $SupportAnswer;

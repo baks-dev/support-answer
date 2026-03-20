@@ -57,7 +57,7 @@ final readonly class UserProfileTypeRepository implements UserProfileTypeInterfa
             'profile',
             TypeProfileEvent::class,
             'profile_event',
-            'profile_event.id = profile.event'
+            'profile_event.id = profile.event',
         );
 
         /* TypeProfile Translate */
@@ -67,7 +67,7 @@ final readonly class UserProfileTypeRepository implements UserProfileTypeInterfa
                 'profile',
                 TypeProfileTrans::class,
                 'profile_trans',
-                'profile_trans.event = profile.event AND profile_trans.local = :local'
+                'profile_trans.event = profile.event AND profile_trans.local = :local',
             );
 
         $dbal
@@ -76,7 +76,7 @@ final readonly class UserProfileTypeRepository implements UserProfileTypeInterfa
                 'profile',
                 TypeProfileInfo::class,
                 'info',
-                'info.profile = profile.id'
+                'info.profile = profile.id',
             );
 
 
@@ -99,7 +99,7 @@ final readonly class UserProfileTypeRepository implements UserProfileTypeInterfa
             array_unshift($results,
                 new TypeProfileUid(TypeProfileUid::TEST,
                     $this->translator->trans('filter.unchosen_profile', domain: 'support-answer.admin'),
-                    null
+                    null,
                 ));
         }
 

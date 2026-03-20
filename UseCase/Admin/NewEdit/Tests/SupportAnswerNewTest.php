@@ -65,7 +65,7 @@ class SupportAnswerNewTest extends KernelTestCase
         $SupportAnswerDTO = new SupportAnswerDTO()->setProfile(new UserProfileUid(UserProfileUid::TEST));
         self::assertTrue($SupportAnswerDTO
             ->getProfile()
-            ->equals(UserProfileUid::TEST)
+            ->equals(UserProfileUid::TEST),
         );
 
         $SupportAnswerDTO->setTitle('New Test Title');
@@ -74,7 +74,7 @@ class SupportAnswerNewTest extends KernelTestCase
         $SupportAnswerDTO->setType(new TypeProfileUid(TypeProfileUid::TEST));
         self::assertTrue($SupportAnswerDTO
             ->getType()
-            ->equals(TypeProfileUid::TEST)
+            ->equals(TypeProfileUid::TEST),
         );
 
 

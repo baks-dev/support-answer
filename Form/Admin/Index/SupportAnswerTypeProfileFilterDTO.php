@@ -43,18 +43,18 @@ final class SupportAnswerTypeProfileFilterDTO
         return $this;
     }
 
-//    private ?TypeProfileInterface $type = null;
-//
-//    public function getType(): ?TypeProfileInterface
-//    {
-//        return $this->type;
-//    }
-//
-//    public function setType(?TypeProfileInterface $type): self
-//    {
-//        $this->type = $type;
-//        return $this;
-//    }
+    //    private ?TypeProfileInterface $type = null;
+    //
+    //    public function getType(): ?TypeProfileInterface
+    //    {
+    //        return $this->type;
+    //    }
+    //
+    //    public function setType(?TypeProfileInterface $type): self
+    //    {
+    //        $this->type = $type;
+    //        return $this;
+    //    }
 
 
 }

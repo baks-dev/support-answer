@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Support\Answer\Repository\UserProfileType;
 
-interface UserProfileTypeInterface {
+interface UserProfileTypeInterface
+{
     public function findUserTypeProfiles();
 }

@@ -55,60 +55,6 @@ final readonly class AutoReplyMessageDispatcher
         private CurrentSupportEventRepository $CurrentSupportEventRepository,
     ) {}
 
-    private function checkPhrases($text): bool
-    {
-        $text = mb_strtolower($text);
-
-        $phrases = [
-            ['когда', 'наличи'],
-
-            ['ещё', 'будут', 'наличи'],
-            ['еще', 'будут', 'наличи'],
-            ['ещё', 'будет', 'наличи'],
-            ['еще', 'будет', 'наличи'],
-
-            ['появится', 'наличи'],
-            ['появиться', 'наличи'],
-            ['появятся', 'наличи'],
-            ['появяться', 'наличи'],
-
-            ['будут', 'в продаж'],
-            ['будут', 'в продаж'],
-            ['будет', 'в продаж'],
-            ['будет', 'в продаж'],
-            ['появятся', 'в продаж'],
-            ['появяться', 'в продаж'],
-
-            ['ожидает', 'поступление'],
-            ['когда', 'поступление'],
-
-        ];
-
-        foreach($phrases as $phrase)
-        {
-
-            $allFound = true;
-
-            foreach($phrase as $word)
-            {
-
-                if(str_contains($text, $word) === false)
-                {
-                    $allFound = false;
-                    break;
-                }
-            }
-
-            if($allFound)
-            {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
     /**
      * Пробуем автоматически ответить на однотипный вопрос о наличии
      */
@@ -172,7 +118,7 @@ final readonly class AutoReplyMessageDispatcher
             return;
         }
 
-        $isFound = $this->checkPhrases($lastMessage);
+        $isFound = $this->checkPhrases($lastMessage->getMessage());
 
         if(false === $isFound)
         {
@@ -219,5 +165,64 @@ final readonly class AutoReplyMessageDispatcher
                 [$Support, self::class.':'.__LINE__],
             );
         }
+    }
+
+    private function checkPhrases(string|null $text): bool
+    {
+        if(empty($text))
+        {
+            return false;
+        }
+
+        $text = mb_strtolower($text);
+
+        $phrases = [
+            ['когда', 'наличи'],
+
+            ['ещё', 'будут', 'наличи'],
+            ['еще', 'будут', 'наличи'],
+            ['ещё', 'будет', 'наличи'],
+            ['еще', 'будет', 'наличи'],
+
+            ['появится', 'наличи'],
+            ['появиться', 'наличи'],
+            ['появятся', 'наличи'],
+            ['появяться', 'наличи'],
+
+            ['будут', 'в продаж'],
+            ['будут', 'в продаж'],
+            ['будет', 'в продаж'],
+            ['будет', 'в продаж'],
+            ['появятся', 'в продаж'],
+            ['появяться', 'в продаж'],
+
+            ['ожидает', 'поступление'],
+            ['когда', 'поступление'],
+
+        ];
+
+        foreach($phrases as $phrase)
+        {
+
+            $allFound = true;
+
+            foreach($phrase as $word)
+            {
+
+                if(str_contains($text, $word) === false)
+                {
+                    $allFound = false;
+                    break;
+                }
+            }
+
+            if($allFound)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 }

@@ -43,7 +43,7 @@ final class SupportAnswerTypeProfileFilterForm extends AbstractType
     private SessionInterface|false $session = false;
 
     private string $sessionKey;
-    
+
     public function __construct(
         private readonly UserProfileTypeRepository $profileTypeRepository,
         private readonly RequestStack $request

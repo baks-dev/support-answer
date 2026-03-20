@@ -37,9 +37,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
-    private static ?string $url = null;
-
     private const string ROLE = 'ROLE_SUPPORT_EDIT';
+    private static ?string $url = null;
 
     #[DependsOnClass(SupportAnswerNewTest::class)]
     public static function setUpBeforeClass(): void

@@ -34,11 +34,28 @@ final class AutoMessagesReply
 
     public function __construct() {}
 
+    public function high(): string
+    {
+        $answerMessage[] = 'Мы ценим Ваше доверие и всегда стремимся предоставить лучший сервис и продукт высокого качества.';
+        $answerMessage[] = 'Мы стремимся предоставить только лучшее, и Ваша покупка подтверждает это.';
+        $answerMessage[] = 'Мы ценим Вашу поддержку и уверены, что Вы будете довольны своим приобретением.';
+        $answerMessage[] = 'Мы рады, что Вы стали нашим клиентом, и надеемся, что Ваш опыт с нашей продукцией будет исключительно положительным.';
+        $answerMessage[] = 'Мы уверены, что наша продукция оправдает Ваши ожидания.';
+        $answerMessage[] = 'Мы уверены, что Вы будете довольны качеством нашей продукции.';
+        $answerMessage[] = 'Для нас важно, чтобы каждый клиент оставался доволен, поэтому мы постоянно работаем над улучшением качества сервиса.';
+        $answerMessage[] = 'Мы ценим каждого клиента и стремимся, чтобы наш сервис становился только лучше благодаря таким отзывам.';
+
+        $key = new Randomizer()->getInt(0, count($answerMessage) - 1);
+        $answerMessage = $answerMessage[$key];
+
+        return $this->hello().PHP_EOL.$answerMessage.PHP_EOL.$this->goodbye();
+    }
+
     /**
      * Текст приветствия
      */
 
-    private function hello(): string
+    public function hello(): string
     {
         $hello = [
             'Благодарим Вас за то, что выбрали наш магазин для покупки!',
@@ -57,7 +74,7 @@ final class AutoMessagesReply
      * Прощальный текст
      */
 
-    private function goodbye(): string
+    public function goodbye(): string
     {
 
         $goodbye = [
@@ -74,23 +91,6 @@ final class AutoMessagesReply
         $key = new Randomizer()->getInt(0, count($goodbye) - 1);
 
         return $goodbye[$key];
-    }
-
-    public function high(): string
-    {
-        $answerMessage[] = 'Мы ценим Ваше доверие и всегда стремимся предоставить лучший сервис и продукт высокого качества.';
-        $answerMessage[] = 'Мы стремимся предоставить только лучшее, и Ваша покупка подтверждает это.';
-        $answerMessage[] = 'Мы ценим Вашу поддержку и уверены, что Вы будете довольны своим приобретением.';
-        $answerMessage[] = 'Мы рады, что Вы стали нашим клиентом, и надеемся, что Ваш опыт с нашей продукцией будет исключительно положительным.';
-        $answerMessage[] = 'Мы уверены, что наша продукция оправдает Ваши ожидания.';
-        $answerMessage[] = 'Мы уверены, что Вы будете довольны качеством нашей продукции.';
-        $answerMessage[] = 'Для нас важно, чтобы каждый клиент оставался доволен, поэтому мы постоянно работаем над улучшением качества сервиса.';
-        $answerMessage[] = 'Мы ценим каждого клиента и стремимся, чтобы наш сервис становился только лучше благодаря таким отзывам.';
-
-        $key = new Randomizer()->getInt(0, count($answerMessage) - 1);
-        $answerMessage = $answerMessage[$key];
-
-        return $this->hello().PHP_EOL.$answerMessage.PHP_EOL.$this->goodbye();
     }
 
     public function avg(): string

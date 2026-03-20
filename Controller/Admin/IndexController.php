@@ -58,7 +58,7 @@ final class IndexController extends AbstractController
             ->createForm(
                 type: SupportAnswerTypeProfileFilterForm::class,
                 data: $filter,
-                options: ['action' => $this->generateUrl('support-answer:admin.index'),]
+                options: ['action' => $this->generateUrl('support-answer:admin.index'),],
             )
             ->handleRequest($request);
 
@@ -71,7 +71,7 @@ final class IndexController extends AbstractController
             ->createForm(
                 type: SearchForm::class,
                 data: $search,
-                options: ['action' => $this->generateUrl('support-answer:admin.index')]
+                options: ['action' => $this->generateUrl('support-answer:admin.index')],
             )
             ->handleRequest($request);
 
@@ -100,7 +100,7 @@ final class IndexController extends AbstractController
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
             ],
-            file: 'support-answer.html.twig'
+            file: 'support-answer.html.twig',
         );
     }
 }
